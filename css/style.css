@@ -1,0 +1,19 @@
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body { 
+    position: relative;
+    overflow: hidden; 
+    background: #f5f0e8; 
+}
+
+#canvas-static, #canvas-dynamic { 
+    display: block;
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    cursor: crosshair; 
+}
