@@ -1,6 +1,9 @@
 import { state } from '../state.js';
 import { screenToWorld } from '../camera.js';
 
+
+let erasedStrokes = [];
+
 function distance(p1, p2) {
   const dx = p1.x - p2.x;
   const dy = p1.y - p2.y;
@@ -30,46 +33,64 @@ function distanceToSegment(p, a, b) {
 
 
 function eraseAt(pos) {
-  state.history = state.history.filter(stroke => {
-    if (stroke.type === 'rect') {
-      let x1, x2, y1, y2;
-      if( stroke.startX === Math.min(stroke.startX, stroke.startX + stroke.width)){
-        x1 = stroke.startX;
-        x2 = stroke.startX + stroke.width;
-      } else {
-        x1 = stroke.startX + stroke.width;
-        x2 = stroke.startX;
+  const toErase = state.strokes.filter(stroke => {
+    if(stroke.type === 'line') {
+      if (distanceToSegment(pos, {x: stroke.startX, y: stroke.startY}, {x: stroke.endX, y: stroke.endY}) < 10) {
+        return true; // remove this line
       }
-      if( stroke.startY === Math.min(stroke.startY, stroke.startY + stroke.height)){
-        y1 = stroke.startY;
-        y2 = stroke.startY + stroke.height;
-      } else {
-        y1 = stroke.startY + stroke.height;
-        y2 = stroke.startY;
-      }
-      if (pos.x >= x1 && pos.x <= x2 && pos.y >= y1 && pos.y <= y2) {
-        return false; // remove this rectangle
-      }
-      return true; // keep this rectangle
+      return false; // keep this line
     }
+
+    if (stroke.type === 'rect') {
+      const x1 = Math.min(stroke.startX, stroke.startX + stroke.width);
+      const x2 = Math.max(stroke.startX, stroke.startX + stroke.width);
+      const y1 = Math.min(stroke.startY, stroke.startY + stroke.height);
+      const y2 = Math.max(stroke.startY, stroke.startY + stroke.height);
+
+      const innerCheck = (pos.x > x1 && pos.x < x2 && pos.y > y1 && pos.y < y2);
+      const outerCheck = (pos.x >= x1 - state.strokeWidth && pos.x <= x2 + state.strokeWidth && pos.y >= y1 - state.strokeWidth && pos.y <= y2 + state.strokeWidth);
+
+      if(stroke.fill) return outerCheck;
+      else if(innerCheck) return false;
+      else return outerCheck;
+    }
+
+    if(stroke.type === 'ellipse') {
+      const threshold = state.strokeWidth;
+      const cx = (stroke.startX + stroke.endX) / 2;
+      const cy = (stroke.startY + stroke.endY) / 2;
+      const rx = Math.abs(stroke.endX - stroke.startX) / 2;
+      const ry = Math.abs(stroke.endY - stroke.startY) / 2;
+
+      const outer = ((pos.x - cx) / (rx + threshold)) ** 2 + ((pos.y - cy) / (ry + threshold)) ** 2;
+      const inner = ((pos.x - cx) / (rx - threshold)) ** 2 + ((pos.y - cy) / (ry - threshold)) ** 2;
+
+      if(stroke.fill) return outer<= 1;
+      else return outer <= 1 && inner >= 1;
+    }
+
     if (stroke.type === 'pen') {
       if (stroke.points.length < 2) {
         if(distance(pos, stroke.points[0]) < 10) {
-          return false;
+          return true;
         }
       }
       for (let i = 0; i < stroke.points.length - 1; i++) {
         if (distanceToSegment(pos, stroke.points[i], stroke.points[Math.min(i + 1, stroke.points.length - 1)]) < 10) {
-          return false; // remove this stroke
+          return true; // remove this stroke
         }
       }
-      return true; // keep this stroke
+      return false; // keep this stroke
     }
   });
+
+  state.strokes = state.strokes.filter(s => !toErase.includes(s));
+  erasedStrokes.push(...toErase);
 }
 
 export function eraserDown(e, canvas) {
     state.isErasing = true;
+    erasedStrokes = [];
     const pos = screenToWorld(e.clientX, e.clientY);
     eraseAt(pos);
 }
@@ -83,5 +104,15 @@ export function eraserMove(e, canvas) {
 
 export function eraserUp(e, canvas) {
     state.isErasing = false;
+    if(erasedStrokes.length === 0) return;
+
+    const removed = [...erasedStrokes];
+    
+    state.undoStack.push({
+      undo: () => removed.forEach(s => state.strokes.push(s)),
+      redo: () => removed.forEach(s => state.strokes.splice(state.strokes.indexOf(s), 1))
+    });
+    state.redoStack = [];
+    erasedStrokes = [];
 }
 

@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -7,9 +7,40 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-        <canvas id="canvas-static"></canvas>
-        <canvas id="canvas-dynamic"></canvas>
-        
+        <div class="main-container">
+            <div id="toolbar">
+                <button class="tool-button active" id="current-tool">🖊</button>
+                <div id="tools-popup" class="popup">
+                    <button id="pen" class="tool tool-button active">🖊 Pen</button>
+                    <button id="line" class="tool tool-button">/ Line</button>
+                    <button id="rect" class="tool tool-button">⬛ Rect</button>
+                    <button id="ellipse" class="tool tool-button">🔴 Ellipse</button>
+                </div>
+
+                <button id="eraser" class="tool tool-button">💸 </button>
+
+                <div class="separator"></div>
+
+                <div class="properties">
+                    <input type="color" id="color-picker" value="#000000">
+                    <button id="stroke-width-display" class="tool-button">5</button>
+                    <div id="stroke-width-popup" class="popup">
+                        <input type="range" id="stroke-width-slider" min="1" max="100" value="5">
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="undo-redo">
+                    <button id="undo" class="tool-button">↩</button>
+                    <button id="redo" class="tool-button">↪</button>
+                </div>
+            </div>
+            <div class="canvas">
+                <canvas id="canvas-static"></canvas>
+                <canvas id="canvas-dynamic"></canvas>
+            </div>
+        </div>
         <script type="module" src="/js/main.js"></script>
     </body>
 </html>

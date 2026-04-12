@@ -9,7 +9,7 @@ export function penDown(e, canvas) {
   state.currentStroke = {
     type: 'pen',
     points: [pos],
-    color: state.color,
+    color: state.strokeColor,
     width: state.strokeWidth
   };
 }
@@ -29,10 +29,15 @@ export function penUp() {
 
   // Only save strokes that have at least one point
   if (state.currentStroke.points.length > 0) {
-    state.history.push(state.currentStroke);
+    const stroke = state.currentStroke;
+    state.strokes.push(stroke);
+    state.undoStack.push({
+      undo: () => state.strokes.splice(state.strokes.indexOf(stroke), 1),
+      redo: () => state.strokes.push(stroke)
+    })
     state.redoStack = [];
+    console.log('undostack', state.undoStack);
   }
-
   state.currentStroke = null;
 }
 

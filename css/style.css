@@ -1,19 +1,190 @@
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body { 
-    position: relative;
-    overflow: hidden; 
-    background: #f5f0e8; 
+body {
+  overflow: hidden;
+  background: #f5f0e8;
+  font-family: system-ui, sans-serif;
 }
 
-#canvas-static, #canvas-dynamic { 
-    display: block;
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    cursor: crosshair; 
+/* ── CANVAS ── */
+#canvas-static,
+#canvas-dynamic {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: crosshair;
 }
+
+/* ── TOOLBAR ── */
+#toolbar {
+  position: fixed;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 6vw;
+  min-width: 52px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  background: #1a1614;
+  border-radius: 14px;
+  padding: 10px 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+
+/* ── SEPARATOR ── */
+.separator {
+  width: 70%;
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+  margin: 4px 0;
+}
+
+/* ── TOOL GROUPS ── */
+.properties,
+.undo-redo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+/* ── BUTTONS ── */
+.tool-button {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tool-button:hover {
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+}
+
+.tool.active {
+  background: #e84c1e;
+  color: #ffffff;
+}
+
+#current-tool.active {
+  background: #e84c1e;
+  color: #ffffff;
+}
+
+/* ── COLOR PICKER ── */
+#color-picker {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: none;
+  cursor: pointer;
+  padding: 2px;
+}
+
+#color-picker:hover {
+  border-color: rgba(255,255,255,0.5);
+}
+
+/* ── POPUP MENUS ── */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: calc(6vw + 10px);
+  background: #1a1614;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  z-index: 101;
+  min-width: 52px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.popup.visible {
+  display: flex;
+}
+
+.popup .tool-button {
+  width: 100%;
+  padding: 0 8px;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* ── STROKE WIDTH POPUP ── */
+#stroke-width-popup {
+  padding: 12px;
+  min-width: 160px;
+  gap: 8px;
+}
+
+.stroke-preview {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#stroke-width-slider {
+  width: 100%;
+  accent-color: #e84c1e;
+}
+
+/* ── PORTRAIT / BOTTOM TOOLBAR ── */
+/* @media (orientation: portrait) {
+  #toolbar {
+    left: 50%;
+    top: auto;
+    bottom: 16px;
+    transform: translateX(-50%);
+    flex-direction: row;
+    width: auto;
+    max-width: 94vw;
+    padding: 8px 10px;
+  }
+
+  .separator {
+    width: 1px;
+    height: 28px;
+    margin: 0 4px;
+  }
+
+  .properties,
+  .undo-redo {
+    flex-direction: row;
+  }
+
+  .tool-button {
+    width: 40px;
+  }
+
+  .popup {
+    left: auto;
+    bottom: calc(10vw + 24px);
+    top: auto;
+  }
+} */

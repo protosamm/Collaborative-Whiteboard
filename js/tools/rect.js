@@ -11,10 +11,10 @@ export function rectDown(e, canvas) {
         width: 0,
         height: 0,
         stroke: true,
-        strokeColor: '#000000',
-        strokeWidth: 1,
+        strokeColor: state.strokeColor,
+        strokeWidth: state.strokeWidth,
         fill: false,
-        fillColor: '#000000'
+        fillColor: state.fillColor
     }
 }
 
@@ -28,7 +28,12 @@ export function rectMove(e, canvas) {
 
 export function rectUp() {
     if(state.currentShape) {
-        state.history.push(state.currentShape);
+        const rect = state.currentShape;
+        state.strokes.push(rect);
+        state.undoStack.push({
+            undo: () => state.strokes.splice(state.strokes.indexOf(rect), 1),
+            redo: () => state.strokes.push(rect)
+        })
         state.redoStack = [];
         state.currentShape = null;
     }
