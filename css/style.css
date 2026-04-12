@@ -91,19 +91,67 @@ body {
   color: #ffffff;
 }
 
+/* ── FILL TOGGLE ── */
+#fill-toggle .fill-slash {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+#fill-toggle.fill-on .fill-slash {
+  opacity: 0; /* hides line */
+}
+
 /* ── COLOR PICKER ── */
-#color-picker {
+
+.color-picker-container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+#fill-color-picker {
+  width: 60%;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+}
+
+#fill-color-picker:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+
+#stroke-color-picker {
+  width: 60%;
   height: 40px;
   border-radius: 8px;
-  border: 2px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,100,100,0.2);
   background: none;
   cursor: pointer;
   padding: 2px;
 }
 
-#color-picker:hover {
-  border-color: rgba(255,255,255,0.5);
+#stroke-color-picker:hover {
+  border-color: rgba(255,100,100,0.5);
+}
+
+.color-swap-clip-buttons {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+}
+
+.color-swap-clip-buttons button {
+  flex: 1;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
 }
 
 /* ── POPUP MENUS ── */
@@ -153,6 +201,8 @@ body {
   width: 100%;
   accent-color: #e84c1e;
 }
+
+
 
 /* ── PORTRAIT / BOTTOM TOOLBAR ── */
 /* @media (orientation: portrait) {

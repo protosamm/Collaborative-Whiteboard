@@ -7,7 +7,13 @@ import { state } from '../state.js';
 const toolbarRect = document.querySelector('#toolbar').getBoundingClientRect();
 const currentToolButton = document.querySelector('#current-tool');
 const tools = document.querySelectorAll('.tool');
-const colorPicker = document.querySelector('#color-picker');
+
+const fillToggle = document.querySelector('#fill-toggle');
+const strokeColorPicker = document.querySelector('#stroke-color-picker');
+const fillColorPicker = document.querySelector('#fill-color-picker');
+const colorSwap = document.querySelector('#color-swap');
+const colorClip = document.querySelector('#color-clip');
+
 const strokeWidthInput = document.querySelector('#stroke-width-display');
 const strokeWidthSlider = document.querySelector('#stroke-width-slider');
 const undoButton = document.querySelector('#undo');
@@ -33,8 +39,36 @@ export function initUI() {
         strokeWidthInput.textContent = state.strokeWidth;
     });
 
-    colorPicker.addEventListener('input', updateColor);
-    colorPicker.addEventListener('change', updateColor);
+    // color pickers
+    strokeColorPicker.addEventListener('input', updateStrokeColor);
+    strokeColorPicker.addEventListener('change', updateStrokeColor);
+    fillColorPicker.addEventListener('input', updateFillColor);
+    fillColorPicker.addEventListener('change', updateFillColor);
+
+    colorSwap.addEventListener('click', () => {
+        const tempColor = state.strokeColor;
+        state.strokeColor = state.fillColor;
+        strokeColorPicker.value = state.strokeColor;
+        state.fillColor = tempColor;
+        fillColorPicker.value = state.fillColor;
+    });
+
+    colorClip.addEventListener('click', () => {
+        state.fillColor = state.strokeColor;
+        fillColorPicker.value = state.fillColor;
+    });
+
+    fillToggle.addEventListener('click', () => {
+        if(state.fill === false) {
+            state.fill = true;
+            fillToggle.classList.add('fill-on');
+        }
+        else { 
+            state.fill = false;
+            fillToggle.classList.remove('fill-on');
+        }
+
+    });
 
     undoButton.addEventListener('click', () => {
         undo();
@@ -48,8 +82,12 @@ export function initUI() {
 }
 
 // functions
-function updateColor(e) {
+function updateStrokeColor(e) {
     state.strokeColor = e.target.value;
+}
+
+function updateFillColor(e) {
+    state.fillColor = e.target.value;
 }
 
 function openToolMenu() {

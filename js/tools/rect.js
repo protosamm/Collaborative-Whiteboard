@@ -13,7 +13,7 @@ export function rectDown(e, canvas) {
         stroke: true,
         strokeColor: state.strokeColor,
         strokeWidth: state.strokeWidth,
-        fill: false,
+        fill: state.fill,
         fillColor: state.fillColor
     }
 }

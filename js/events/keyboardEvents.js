@@ -4,6 +4,9 @@ import { state } from '../state.js';
 import { undo, redo } from '../history.js';
 import { updateCursor, setActiveTool } from './ui.js';
 
+const strokeColorPicker = document.querySelector('#stroke-color-picker');
+const fillColorPicker = document.querySelector('#fill-color-picker');
+
 export function initKeyboardEvents() {
     window.addEventListener('keydown', e => {
         if (e.code === 'Space') {
@@ -33,6 +36,14 @@ export function initKeyboardEvents() {
         switch (e.key) {
             case '[': state.strokeWidth = Math.max(state.strokeWidth - 1, 1); break;
             case ']': state.strokeWidth = Math.min(state.strokeWidth + 1, 50); break;
+            case 'x': {
+                const tempColor = state.strokeColor;
+                state.strokeColor = state.fillColor;
+                strokeColorPicker.value = state.strokeColor;
+                state.fillColor = tempColor;
+                fillColorPicker.value = state.fillColor;
+                break;
+            }
         }
                 
     });
