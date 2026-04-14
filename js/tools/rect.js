@@ -3,7 +3,7 @@ import { screenToWorld } from "../camera.js";
 
 export function rectDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
-
+    const fillColor = state.clipColors ? state.strokeColor : state.fillColor;
     state.currentShape = {
         type: 'rect',
         startX: pos.x,
@@ -14,7 +14,7 @@ export function rectDown(e, canvas) {
         strokeColor: state.strokeColor,
         strokeWidth: state.strokeWidth,
         fill: state.fill,
-        fillColor: state.fillColor
+        fillColor: fillColor
     }
 }
 

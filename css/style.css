@@ -154,6 +154,19 @@ body {
   cursor: pointer;
 }
 
+#color-clip svg rect {
+  stroke: #ffffff;
+}
+
+#color-clip.clipped svg rect {
+  stroke: #e84c1e;
+}
+
+#fill-color-picker.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 /* ── POPUP MENUS ── */
 .popup {
   display: none;

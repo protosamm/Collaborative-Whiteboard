@@ -54,8 +54,15 @@ export function initUI() {
     });
 
     colorClip.addEventListener('click', () => {
-        state.fillColor = state.strokeColor;
-        fillColorPicker.value = state.fillColor;
+        state.clipColors = !state.clipColors;
+
+        if(state.clipColors) {
+            colorClip.classList.add('clipped');
+            fillColorPicker.classList.add('disabled');
+        }else {
+            colorClip.classList.remove('clipped');
+            fillColorPicker.classList.remove('disabled');
+        }
     });
 
     fillToggle.addEventListener('click', () => {

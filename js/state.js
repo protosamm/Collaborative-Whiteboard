@@ -4,6 +4,7 @@ export const state = {
   strokeWidth: 3,    // active stroke width
   fill: false,
   fillColor: '#1a1614',  // active fill color
+  clipColors: false,
   
   // GLOBAL FLAGS
   isErasing: false,
