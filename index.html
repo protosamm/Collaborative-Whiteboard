@@ -8,13 +8,14 @@
     </head>
     <body>
         <div class="main-container">
+            <button id="toolbar-toggle">(</button>
             <div id="toolbar">
                 <button class="tool-button active" id="current-tool">🖊</button>
                 <div id="tools-popup" class="popup">
                     <button id="pen" class="tool tool-button active">🖊 Pen</button>
                     <button id="line" class="tool tool-button">/ Line</button>
-                    <button id="rect" class="tool tool-button">⬛ Rect</button>
-                    <button id="ellipse" class="tool tool-button">🔴 Ellipse</button>
+                    <button id="rect" class="tool tool-button">⬜ Rect</button>
+                    <button id="ellipse" class="tool tool-button">⚪ Ellipse</button>
                 </div>
 
                 <button id="eraser" class="tool tool-button">
@@ -58,6 +59,17 @@
                     <button id="undo" class="tool-button">↩</button>
                     <button id="redo" class="tool-button">↪</button>
                 </div>
+
+                <div class="separator"></div>
+
+                <button id="save" class="tool-button">💾</button>
+                <button id="load" class="tool-button">📂</button>
+            </div>
+            <div id="zoom-control">
+                <button id="zoom-out">−</button>
+                <input type="range" id="zoom-slider" min="1" max="150" value="82">
+                <button id="zoom-in">+</button>
+                <span id="zoom-display">82%</span>
             </div>
             <div class="canvas">
                 <canvas id="canvas-static"></canvas>

@@ -2,10 +2,12 @@ import { dynamicCanvas } from '../canvas.js';
 import { renderStatic } from '../renderer.js';
 import { state } from '../state.js';
 import { undo, redo } from '../history.js';
-import { updateCursor, setActiveTool } from './ui.js';
+import { updateCursor, setActiveTool, setActiveToolIcon } from './ui.js';
+import { saveDrawing, loadDrawing } from '../fileManager.js';
 
 const strokeColorPicker = document.querySelector('#stroke-color-picker');
 const fillColorPicker = document.querySelector('#fill-color-picker');
+const toolbarToggle = document.querySelector('#toolbar-toggle');
 
 export function initKeyboardEvents() {
     window.addEventListener('keydown', e => {
@@ -27,9 +29,12 @@ export function initKeyboardEvents() {
     // ── KEYBOARD SHORTCUT EVENTS ──────────────────────────────────────
     window.addEventListener('keydown', e => {
         if (e.ctrlKey) {
+            e.preventDefault();
             switch (e.key) {
                 case 'z': undo(); renderStatic(); break;
                 case 'y': redo(); renderStatic(); break;
+                case 's': saveDrawing(); break;
+                case 'o': loadDrawing(); break;
             }
             return;
         }
@@ -42,6 +47,10 @@ export function initKeyboardEvents() {
                 strokeColorPicker.value = state.strokeColor;
                 state.fillColor = tempColor;
                 fillColorPicker.value = state.fillColor;
+                break;
+            }
+            case 'n': {
+                toolbarToggle.click();
                 break;
             }
         }
@@ -74,5 +83,6 @@ export function initKeyboardEvents() {
         };
         updateCursor();
         setActiveTool();
+        setActiveToolIcon();
     })
 }

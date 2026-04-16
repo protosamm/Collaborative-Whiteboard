@@ -7,6 +7,7 @@ import { eraserDown, eraserMove, eraserUp } from '../tools/eraser.js';
 import { rectDown, rectMove, rectUp } from '../tools/rect.js';
 import { lineDown, lineMove, lineUp } from '../tools/line.js';
 import { ellipseDown, ellipseMove, ellipseUp } from '../tools/ellipse.js';
+import { updateZoomDisplay } from './ui.js';
 
 let isPanning = false;
 let panStart = { x: 0, y: 0 };
@@ -127,7 +128,8 @@ export function initMouseEvents() {
       const actualFactor = camera.zoom / prevZoom;
       camera.x = cx - (cx - camera.x) * actualFactor;
       camera.y = cy - (cy - camera.y) * actualFactor;
-    
+      
+      updateZoomDisplay();
       renderDynamic();
       renderStatic();
     }, { passive: false });
