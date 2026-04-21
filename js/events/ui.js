@@ -57,8 +57,7 @@ export function initUI() {
     });
 
     strokeWidthSlider.addEventListener('input', (e) => {
-        state.strokeWidth = e.target.value;
-        strokeWidthInput.textContent = state.strokeWidth;
+        updateStrokeWidth(e.target.value);
     });
 
     // color pickers
@@ -115,24 +114,26 @@ export function initUI() {
         renderDynamic();
         renderStatic();
     });
-
+    
     zoomOutButton.addEventListener('click', () => {
         camera.zoom = Math.max(camera.zoom / 1.1, 0.01);
         updateZoomDisplay();
         renderDynamic();
         renderStatic();
     });
-
+    
     zoomSlider.addEventListener('input', (e) => {
         const zoomPercent = parseInt(e.target.value);
         const minZoom = 0.01;
         const maxZoom = 50;
         const minP = 1;
         const maxP = 150;
-
+        
         // reverse the normalization
         const t = (zoomPercent - minP) / (maxP - minP);
         camera.zoom = Math.exp(t * (Math.log(maxZoom) - Math.log(minZoom)) + Math.log(minZoom));
+        
+        // state.strokeWidth = state.strokeWidth / camera.zoom;
         updateZoomDisplay();
         renderDynamic();
         renderStatic();
@@ -145,6 +146,7 @@ export function initUI() {
 }
 
 // functions
+
 function updateStrokeColor(e) {
     state.strokeColor = e.target.value;
 }
@@ -190,6 +192,22 @@ export function updateZoomDisplay() {
 
     zoomDisplay.textContent = `${zoomPercent}%`;
     zoomSlider.value = zoomPercent;
+}
+
+export function updateStrokeWidth(newWidth) {
+    state.strokeWidth = Math.max(1, Math.min(100, newWidth));
+
+    renderDynamic();
+
+    // Sync all UI elements
+    
+    if (strokeWidthInput) {
+        strokeWidthInput.textContent = state.strokeWidth;
+    }
+
+    if (strokeWidthSlider) {
+        strokeWidthSlider.value = state.strokeWidth;
+    }
 }
 
 export function setActiveTool() {

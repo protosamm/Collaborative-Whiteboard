@@ -1,5 +1,5 @@
 import { state } from "../state.js";
-import { screenToWorld } from "../camera.js";
+import { camera, screenToWorld } from "../camera.js";
 
 export function rectDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
@@ -12,7 +12,7 @@ export function rectDown(e, canvas) {
         height: 0,
         stroke: true,
         strokeColor: state.strokeColor,
-        strokeWidth: state.strokeWidth,
+        strokeWidth: state.strokeWidth / camera.zoom, 
         fill: state.fill,
         fillColor: fillColor
     }

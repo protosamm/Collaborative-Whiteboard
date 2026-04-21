@@ -1,13 +1,15 @@
 import { dynamicCanvas } from '../canvas.js';
-import { renderStatic } from '../renderer.js';
+import { renderDynamic, renderStatic } from '../renderer.js';
 import { state } from '../state.js';
 import { undo, redo } from '../history.js';
 import { updateCursor, setActiveTool, setActiveToolIcon } from './ui.js';
+import { updateStrokeWidth } from './ui.js';
 import { saveDrawing, loadDrawing } from '../fileManager.js';
 
 const strokeColorPicker = document.querySelector('#stroke-color-picker');
 const fillColorPicker = document.querySelector('#fill-color-picker');
 const toolbarToggle = document.querySelector('#toolbar-toggle');
+const strokeWidthDisplay = document.querySelector('#stroke-width-display');
 
 export function initKeyboardEvents() {
     window.addEventListener('keydown', e => {
@@ -39,8 +41,8 @@ export function initKeyboardEvents() {
             return;
         }
         switch (e.key) {
-            case '[': state.strokeWidth = Math.max(state.strokeWidth - 1, 1); break;
-            case ']': state.strokeWidth = Math.min(state.strokeWidth + 1, 50); break;
+            case '[': updateStrokeWidth(state.strokeWidth - 1); break;
+            case ']': updateStrokeWidth(state.strokeWidth + 1); break;
             case 'x': {
                 const tempColor = state.strokeColor;
                 state.strokeColor = state.fillColor;

@@ -1,5 +1,5 @@
 import { state } from "../state.js";
-import { screenToWorld } from "../camera.js";
+import { camera, screenToWorld } from "../camera.js";
 
 export function lineDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
@@ -11,7 +11,7 @@ export function lineDown(e, canvas) {
         endX: pos.x,
         endY: pos.y,
         strokeColor: state.strokeColor,
-        strokeWidth: state.strokeWidth
+        strokeWidth: state.strokeWidth / camera.zoom
     }
 }
 
@@ -42,7 +42,7 @@ export function drawLine(ctx, line) {
     ctx.beginPath();
     ctx.moveTo(line.startX, line.startY);
     ctx.lineTo(line.endX, line.endY);
-    ctx.lineWidth = line.strokeWidth;
+    ctx.lineWidth = line.strokeWidth
     ctx.strokeStyle = line.strokeColor;
     ctx.stroke();
 }

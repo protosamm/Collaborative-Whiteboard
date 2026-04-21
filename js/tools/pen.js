@@ -1,5 +1,5 @@
 import { state } from '../state.js';
-import { screenToWorld } from '../camera.js';
+import { camera, screenToWorld } from '../camera.js';
 
 // Called when mouse is pressed down on canvas
 export function penDown(e, canvas) {
@@ -10,7 +10,7 @@ export function penDown(e, canvas) {
     type: 'pen',
     points: [pos],
     color: state.strokeColor,
-    width: state.strokeWidth
+    width: state.strokeWidth / camera.zoom
   };
 }
 

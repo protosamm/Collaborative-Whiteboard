@@ -16,7 +16,7 @@ export async function saveDrawing() {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'untitled_whiteboard.wboard';
+    a.download = 'whiteboard.wboard';
     a.click();
 
     URL.revokeObjectURL(url);

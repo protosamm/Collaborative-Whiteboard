@@ -30,6 +30,8 @@ export function renderDynamic() {
     }
 
     dynamicCtx.restore();
+
+    renderCursor(dynamicCtx);
 }
 
 export function renderStatic() {
@@ -47,6 +49,7 @@ export function renderStatic() {
     staticCtx.restore();
 
 }
+
 
 
 function drawItem(ctx, item) {
@@ -68,3 +71,12 @@ function drawItem(ctx, item) {
     ctx.restore();
 }
 
+export function renderCursor(ctx) {
+
+    ctx.beginPath();
+    ctx.arc(state.mouseX, state.mouseY, state.strokeWidth/2, 0, Math.PI * 2);
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+}

@@ -1,4 +1,4 @@
-import { screenToWorld } from "../camera.js";
+import { camera, screenToWorld } from "../camera.js";
 import { state } from "../state.js";
 
 export function ellipseDown(e, canvas) {
@@ -12,7 +12,7 @@ export function ellipseDown(e, canvas) {
         endY : pos.y,
         stroke : true,
         strokeColor : state.strokeColor,
-        strokeWidth : state.strokeWidth,
+        strokeWidth : state.strokeWidth / camera.zoom,
         fill : state.fill,
         fillColor : state.fillColor
     }

@@ -57,33 +57,35 @@ export function initMouseEvents() {
       if (isPanning) {
         camera.x = e.clientX - panStart.x;
         camera.y = e.clientY - panStart.y;
+        
         renderDynamic();
         renderStatic();
         return;
       }
-    
+      
+      state.mouseX = e.clientX;
+      state.mouseY = e.clientY;
+      
       switch(state.tool) {
         case 'line':
           lineMove(e, dynamicCanvas);
-          renderDynamic();
           break;
         case 'pen':
           penMove(e, dynamicCanvas);
-          renderDynamic();
           break;
         case 'eraser':
           eraserMove(e, staticCanvas);
-          renderStatic();
           break;
         case 'rect':
           rectMove(e, dynamicCanvas);
-          renderDynamic();
           break; 
         case 'ellipse':
           ellipseMove(e, dynamicCanvas);
-          renderDynamic();
           break;
       }
+
+      
+      renderDynamic();
     });
     
     window.addEventListener('mouseup', e => {
