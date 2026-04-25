@@ -75,6 +75,7 @@ export function initMouseEvents() {
           break;
         case 'eraser':
           eraserMove(e, staticCanvas);
+          renderStatic();
           break;
         case 'rect':
           rectMove(e, dynamicCanvas);
@@ -84,7 +85,6 @@ export function initMouseEvents() {
           break;
       }
 
-      
       renderDynamic();
     });
     

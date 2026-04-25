@@ -1,6 +1,7 @@
 import { state } from "../state.js";
 import { camera, screenToWorld } from "../camera.js";
 import { generateId } from '../utils.js';
+import { emitStroke } from "../multiplayer/socket.js";
 
 export function lineDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
@@ -30,8 +31,11 @@ export function lineUp() {
     if(state.currentShape) {
         const line = state.currentShape;
         state.strokes.push(line);
-        
+        emitStroke(line);
         state.undoStack.push({
+            type: 'add',
+            stroke: line,    
+            strokeId: line.id,
             undo: () => state.strokes.splice(state.strokes.indexOf(line), 1),
             redo: () => state.strokes.push(line)
         })

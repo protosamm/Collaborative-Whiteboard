@@ -1,5 +1,9 @@
 export const state = {
   id: null,
+  roomCode: null,
+  isHost: false,
+
+  // ---------TOOL SETTINGS----------
   tool: 'pen',       // active tool
   strokeColor: '#1a1614',  // active stroke color
   strokeWidth: 5,    // active stroke width

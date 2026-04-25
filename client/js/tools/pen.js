@@ -1,6 +1,7 @@
 import { state } from '../state.js';
 import { camera, screenToWorld } from '../camera.js';
 import { generateId } from '../utils.js';
+import { emitStroke } from '../multiplayer/socket.js';
 
 // Called when mouse is pressed down on canvas
 export function penDown(e, canvas) {
@@ -33,12 +34,15 @@ export function penUp() {
   if (state.currentStroke.points.length > 0) {
     const stroke = state.currentStroke;
     state.strokes.push(stroke);
+    emitStroke(stroke);
     state.undoStack.push({
+      type: 'add',
+      stroke: stroke,    
+      strokeId: stroke.id,
       undo: () => state.strokes.splice(state.strokes.indexOf(stroke), 1),
       redo: () => state.strokes.push(stroke)
     })
     state.redoStack = [];
-    console.log('undostack', state.undoStack);
   }
   state.currentStroke = null;
 }

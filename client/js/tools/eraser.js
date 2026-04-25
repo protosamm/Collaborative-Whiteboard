@@ -1,5 +1,6 @@
 import { state } from '../state.js';
 import { screenToWorld } from '../camera.js';
+import { emitErase } from '../multiplayer/socket.js';
 
 let erasedStrokes = [];
 
@@ -107,8 +108,11 @@ export function eraserUp(e, canvas) {
 
     const removed = [...erasedStrokes];
     const removedIds = removed.map(s => s.id);
-    
+    emitErase(removedIds);
     state.undoStack.push({
+      type: 'erase',
+      removed: [...removed],
+      removedIds: removed.map(s => s.id),
       undo: () => removed.forEach(s => state.strokes.push(s)),
       redo: () => removed.forEach(s => state.strokes.splice(state.strokes.indexOf(s), 1))
     });

@@ -12,11 +12,68 @@ const toolbarToggle = document.querySelector('#toolbar-toggle');
 const strokeWidthDisplay = document.querySelector('#stroke-width-display');
 
 export function initKeyboardEvents() {
+
+    const keymap = {
+        // ── GENERAL SHORTCUTS ────────────────────────────
+        '[': () => updateStrokeWidth(state.strokeWidth - 1),
+        ']': () => updateStrokeWidth(state.strokeWidth + 1),
+
+        'x': () => {
+            const tempColor = state.strokeColor;
+            state.strokeColor = state.fillColor;
+            strokeColorPicker.value = state.strokeColor;
+            state.fillColor = tempColor;
+            fillColorPicker.value = state.fillColor;
+        },
+
+        'n': () => toolbarToggle.click(),
+
+        // ── TOOL SELECTION ───────────────────────────────
+        'l': () => { state.tool = 'line'; state.isErasing = false; },
+        'p': () => { state.tool = 'pen'; state.isErasing = false; },
+        'e': () => { state.tool = 'eraser'; },
+        'r': () => { state.tool = 'rect'; state.isErasing = false; },
+        'o': () => { state.tool = 'ellipse'; state.isErasing = false; },
+    };
+
+    const ctrlKeymap = {
+        'z': () => { undo(); renderStatic(); },
+        'y': () => { redo(); renderStatic(); },
+        's': () => saveDrawing(),
+        'o': () => loadDrawing(),
+    };
+
     window.addEventListener('keydown', e => {
+        // ignore shortcuts when typing in any input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; 
+
+        // ── SPACE (PAN MODE) ─────────────────────────────
         if (e.code === 'Space') {
             state.isSpaceDown = true;
             dynamicCanvas.style.cursor = 'grab';
-            e.preventDefault(); // prevent page scroll
+            e.preventDefault();
+            return;
+        }
+
+        // ── CTRL SHORTCUTS ───────────────────────────────
+        if (e.ctrlKey) {
+            const fn = ctrlKeymap[e.key];
+            if (fn) {
+                e.preventDefault();
+                fn();
+            }
+            return;
+        }
+
+        // ── NORMAL KEYMAP ────────────────────────────────
+        const fn = keymap[e.key];
+        if (fn) {
+            fn();
+
+            // update UI after tool-related changes
+            updateCursor();
+            setActiveTool();
+            setActiveToolIcon();
         }
     });
 
@@ -26,65 +83,4 @@ export function initKeyboardEvents() {
             dynamicCanvas.style.cursor = 'crosshair';
         }
     });
-
-
-    // ── KEYBOARD SHORTCUT EVENTS ──────────────────────────────────────
-    window.addEventListener('keydown', e => {
-        if (e.ctrlKey) {
-            e.preventDefault();
-            switch (e.key) {
-                case 'z': undo(); renderStatic(); break;
-                case 'y': redo(); renderStatic(); break;
-                case 's': saveDrawing(); break;
-                case 'o': loadDrawing(); break;
-            }
-            return;
-        }
-        switch (e.key) {
-            case '[': updateStrokeWidth(state.strokeWidth - 1); break;
-            case ']': updateStrokeWidth(state.strokeWidth + 1); break;
-            case 'x': {
-                const tempColor = state.strokeColor;
-                state.strokeColor = state.fillColor;
-                strokeColorPicker.value = state.strokeColor;
-                state.fillColor = tempColor;
-                fillColorPicker.value = state.fillColor;
-                break;
-            }
-            case 'n': {
-                toolbarToggle.click();
-                break;
-            }
-        }
-                
-    });
-
-    // ── TOOL SELECTION SHORTCUTS ──────────────────────────────────────
-
-    window.addEventListener('keydown', e=>{
-        switch(e.key){
-            case 'l':
-                state.tool = 'line';
-                state.isErasing = false;
-                break;
-            case 'p':
-                state.tool = 'pen';
-                state.isErasing = false;
-                break;
-            case 'e':
-                state.tool = 'eraser';
-                break;
-            case 'r':
-                state.tool = 'rect';
-                state.isErasing = false;
-                break;
-            case 'o':
-                state.tool = 'ellipse';
-                state.isErasing = false;
-                break;
-        };
-        updateCursor();
-        setActiveTool();
-        setActiveToolIcon();
-    })
 }

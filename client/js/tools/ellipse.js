@@ -1,6 +1,7 @@
 import { camera, screenToWorld } from "../camera.js";
 import { state } from "../state.js";
 import { generateId } from '../utils.js';
+import { emitStroke } from '../multiplayer/socket.js'
 
 export function ellipseDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
@@ -33,7 +34,11 @@ export function ellipseUp() {
     if(state.currentShape) {
         const ellipse = state.currentShape;
         state.strokes.push(ellipse);
+        emitStroke(ellipse);
         state.undoStack.push({
+            type: 'add',
+            stroke: ellipse,    
+            strokeId: ellipse.id,
             undo: () => state.strokes.splice(state.strokes.indexOf(ellipse), 1),
             redo: () => state.strokes.push(ellipse)
         });

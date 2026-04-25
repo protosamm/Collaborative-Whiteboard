@@ -1,6 +1,7 @@
 import { state } from "../state.js";
 import { camera, screenToWorld } from "../camera.js";
 import { generateId } from "../utils.js";
+import { emitStroke } from "../multiplayer/socket.js";
 
 export function rectDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
@@ -32,7 +33,11 @@ export function rectUp() {
     if(state.currentShape) {
         const rect = state.currentShape;
         state.strokes.push(rect);
+        emitStroke(rect);
         state.undoStack.push({
+            type: 'add',
+            stroke: rect,    
+            strokeId: rect.id,
             undo: () => state.strokes.splice(state.strokes.indexOf(rect), 1),
             redo: () => state.strokes.push(rect)
         })

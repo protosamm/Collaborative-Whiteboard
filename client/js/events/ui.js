@@ -4,6 +4,7 @@ import { undo, redo } from '../history.js';
 import { saveDrawing, loadDrawing } from '../fileManager.js';
 import { state } from '../state.js';
 import { camera } from '../camera.js';
+import { leaveRoom } from '../multiplayer/room.js';
 
 // variables
 const toolbarRect = document.querySelector('#toolbar').getBoundingClientRect();
@@ -33,6 +34,10 @@ const zoomDisplay = document.querySelector('#zoom-display');
 export function initUI() {
     
     // event listners
+
+    document.getElementById('leave-room-btn').addEventListener('click', () => {
+        leaveRoom();
+    });
 
     toolbarToggle.addEventListener('click', () => {
         const toolbar = document.querySelector('#toolbar');
@@ -251,4 +256,11 @@ export function updateCursor() {
         default:
             dynamicCanvas.style.cursor = 'default';
     }   
+}
+
+export function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), duration);
 }

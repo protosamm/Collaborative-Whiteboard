@@ -3,6 +3,7 @@ import { renderDynamic, renderStatic } from './renderer.js';
 import { initMouseEvents } from './events/mouseEvents.js';
 import { initKeyboardEvents } from './events/keyboardEvents.js';
 import { initUI } from './events/ui.js';
+import './multiplayer/room.js';
 
 // ── RESIZE ──────────────────────────────────────────────
 
