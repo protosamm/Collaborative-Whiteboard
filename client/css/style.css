@@ -13,6 +13,7 @@ body {
 /* ── CANVAS ── */
 #canvas-static,
 #canvas-dynamic {
+  cursor: none;
   display: block;
   position: absolute;
   top: 0;
@@ -274,43 +275,6 @@ body {
 }
 
 
-/* ── PORTRAIT / BOTTOM TOOLBAR ── */
-/* @media (orientation: portrait) {
-  #toolbar {
-    left: 50%;
-    top: auto;
-    bottom: 16px;
-    transform: translateX(-50%);
-    flex-direction: row;
-    width: auto;
-    max-width: 94vw;
-    padding: 8px 10px;
-  }
-
-  .separator {
-    width: 1px;
-    height: 28px;
-    margin: 0 4px;
-  }
-
-  .properties,
-  .undo-redo {
-    flex-direction: row;
-  }
-
-  .tool-button {
-    width: 40px;
-  }
-
-  .popup {
-    left: auto;
-    bottom: calc(10vw + 24px);
-    top: auto;
-  }
-} */
-
-
-
 
 /* ---------------------------------- ROOM SECTION -------------------------- */
 
@@ -459,4 +423,34 @@ body {
 
 #leave-room-btn:hover {
   opacity: 1;
+}
+
+
+
+
+#crosshair {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  transform: translate(-50%, -50%);
+}
+
+.ch-h {
+  position: absolute;
+  width: 10px;
+  height: 1px;
+  background: #1a1614;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ch-v {
+  position: absolute;
+  width: 1px;
+  height: 10px;
+  background: #1a1614;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

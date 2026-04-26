@@ -6,6 +6,7 @@ import { drawRect } from './tools/rect.js';
 import { drawStroke } from './tools/pen.js';
 import { drawLine } from './tools/line.js';
 import { drawEllipse } from './tools/ellipse.js';
+import { drawCursors } from './multiplayer/cursors.js';
 
 export function renderDynamic() {
     dynamicCtx.clearRect(0, 0, dynamicCanvas.width, dynamicCanvas.height);
@@ -30,7 +31,7 @@ export function renderDynamic() {
     }
 
     dynamicCtx.restore();
-
+    drawCursors(dynamicCtx);
     renderCursor(dynamicCtx);
 }
 

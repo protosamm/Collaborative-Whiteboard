@@ -110,6 +110,16 @@ socket.on('strokes-erased', ({ ids }) => {
   renderStatic();
 });
 
+socket.on('cursor-move', ({ id, x, y }) => {
+  state.cursors[id] = { x, y };
+  renderDynamic();
+});
+
+socket.on('cursor-remove', ({ id }) => {
+  delete state.cursors[id];
+  renderDynamic();
+});
+
 socket.on('connect', () => {
   console.log('socket connected');
   tryAutoRejoin();

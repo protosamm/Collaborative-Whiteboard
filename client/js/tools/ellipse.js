@@ -22,12 +22,22 @@ export function ellipseDown(e, canvas) {
 }
 
 export function ellipseMove(e, canvas) {
+  if (!state.currentShape) return;
+  const pos = screenToWorld(e.clientX, e.clientY);
 
-    const pos = screenToWorld(e.clientX, e.clientY);
-    if(state.currentShape) {
-        state.currentShape.endX = pos.x;
-        state.currentShape.endY = pos.y;
-    }
+  let endX = pos.x;
+  let endY = pos.y;
+
+  if (e.shiftKey) {
+    const width = pos.x - state.currentShape.startX;
+    const height = pos.y - state.currentShape.startY;
+    const size = Math.max(Math.abs(width), Math.abs(height));
+    endX = state.currentShape.startX + (width < 0 ? -size : size);
+    endY = state.currentShape.startY + (height < 0 ? -size : size);
+  }
+
+  state.currentShape.endX = endX;
+  state.currentShape.endY = endY;
 }
 
 export function ellipseUp() {

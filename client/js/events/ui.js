@@ -239,24 +239,24 @@ export function setActiveToolIcon() {
     }
 }
 
-export function updateCursor() {
-    switch(state.tool) {
-        case 'pen':
-            dynamicCanvas.style.cursor = 'default';
-            break;
-        case 'line':
-            dynamicCanvas.style.cursor = 'ew-resize';
-            break;
-        case 'rect':
-            dynamicCanvas.style.cursor = 'crosshair';
-            break;
-        case 'ellipse':
-            dynamicCanvas.style.cursor = 'pointer';
-            break;
-        default:
-            dynamicCanvas.style.cursor = 'default';
-    }   
-}
+// export function updateCursor() {
+//     switch(state.tool) {
+//         case 'pen':
+//             dynamicCanvas.style.cursor = 'default';
+//             break;
+//         case 'line':
+//             dynamicCanvas.style.cursor = 'ew-resize';
+//             break;
+//         case 'rect':
+//             dynamicCanvas.style.cursor = 'crosshair';
+//             break;
+//         case 'ellipse':
+//             dynamicCanvas.style.cursor = 'pointer';
+//             break;
+//         default:
+//             dynamicCanvas.style.cursor = 'default';
+//     }   
+// }
 
 export function showToast(message, duration = 3000) {
   const toast = document.getElementById('toast');

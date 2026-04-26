@@ -2,7 +2,7 @@ import { dynamicCanvas } from '../canvas.js';
 import { renderDynamic, renderStatic } from '../renderer.js';
 import { state } from '../state.js';
 import { undo, redo } from '../history.js';
-import { updateCursor, setActiveTool, setActiveToolIcon } from './ui.js';
+import { setActiveTool, setActiveToolIcon } from './ui.js';
 import { updateStrokeWidth } from './ui.js';
 import { saveDrawing, loadDrawing } from '../fileManager.js';
 
@@ -71,7 +71,6 @@ export function initKeyboardEvents() {
             fn();
 
             // update UI after tool-related changes
-            updateCursor();
             setActiveTool();
             setActiveToolIcon();
         }
@@ -80,7 +79,7 @@ export function initKeyboardEvents() {
     window.addEventListener('keyup', e => {
         if (e.code === 'Space') {
             state.isSpaceDown = false;
-            dynamicCanvas.style.cursor = 'crosshair';
+            dynamicCanvas.style.cursor = 'none';
         }
     });
 }

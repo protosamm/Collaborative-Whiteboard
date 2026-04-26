@@ -22,6 +22,11 @@ io.on('connection', socket => {
   console.log('client connected:', socket.id);
 
   socket.on('create-room', ({ roomCode, password }) => {
+    if(rooms.size >= 500) {
+      socket.emit('error', { message: 'Server full, try again later' });
+      return;
+    }
+    
     if (rooms.has(roomCode)) {
       socket.emit('error', { message: 'Room already exists' });
       return;
@@ -72,11 +77,20 @@ io.on('connection', socket => {
     socket.to(roomCode).emit('strokes-erased', { ids });
   });
 
+  socket.on('cursor-move', ({ roomCode, x, y }) => {
+    socket.to(roomCode).emit('cursor-move', {
+      id: socket.id,
+      x, y
+    });
+  });
+
   socket.on('disconnect', () => {
     console.log('client disconnected:', socket.id);
 
     rooms.forEach((room, roomCode) => {
       if (!room.clients.has(socket.id)) return;
+      // inside disconnect handler
+      socket.to(roomCode).emit('cursor-remove', { id: socket.id });
       room.clients.delete(socket.id);
 
       // last person left — close room immediately

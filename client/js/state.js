@@ -23,5 +23,7 @@ export const state = {
   currentShape: null,
 
   mouseX: 0,   //Mouse position
-  mouseY: 0
+  mouseY: 0,
+
+  cursors: {}
 };

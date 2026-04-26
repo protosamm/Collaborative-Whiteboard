@@ -3,7 +3,7 @@ import { camera, screenToWorld } from "../camera.js";
 import { generateId } from "../utils.js";
 import { emitStroke } from "../multiplayer/socket.js";
 
-export function rectDown(e, canvas) {
+export function rectDown(e) {
     const pos = screenToWorld(e.clientX, e.clientY);
     const fillColor = state.clipColors ? state.strokeColor : state.fillColor;
     state.currentShape = {
@@ -21,12 +21,21 @@ export function rectDown(e, canvas) {
     }
 }
 
-export function rectMove(e, canvas) {
-    const pos = screenToWorld(e.clientX, e.clientY);
-    if(state.currentShape) {
-        state.currentShape.width = pos.x - state.currentShape.startX;
-        state.currentShape.height = pos.y - state.currentShape.startY;
-    }
+export function rectMove(e) {
+  if (!state.currentShape) return;
+  const pos = screenToWorld(e.clientX, e.clientY);
+  
+  let width = pos.x - state.currentShape.startX;
+  let height = pos.y - state.currentShape.startY;
+
+  if (e.shiftKey) {
+    const size = Math.max(Math.abs(width), Math.abs(height));
+    width = width < 0 ? -size : size;
+    height = height < 0 ? -size : size;
+  }
+
+  state.currentShape.width = width;
+  state.currentShape.height = height;
 }
 
 export function rectUp() {

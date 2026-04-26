@@ -1,6 +1,6 @@
 import { dynamicCanvas, staticCanvas } from '../canvas.js';
 import { renderDynamic, renderStatic } from '../renderer.js';
-import { camera } from '../camera.js';
+import { camera, screenToWorld } from '../camera.js';
 import { state } from '../state.js';
 import { penDown, penMove, penUp} from '../tools/pen.js';
 import { eraserDown, eraserMove, eraserUp } from '../tools/eraser.js';
@@ -8,6 +8,9 @@ import { rectDown, rectMove, rectUp } from '../tools/rect.js';
 import { lineDown, lineMove, lineUp } from '../tools/line.js';
 import { ellipseDown, ellipseMove, ellipseUp } from '../tools/ellipse.js';
 import { updateZoomDisplay } from './ui.js';
+import { emitCursor } from '../multiplayer/cursors.js';
+
+const crosshair = document.getElementById('crosshair');
 
 let isPanning = false;
 let panStart = { x: 0, y: 0 };
@@ -54,6 +57,10 @@ export function initMouseEvents() {
     });
     
     window.addEventListener('mousemove', e => {
+
+      crosshair.style.left = e.clientX + 'px';
+      crosshair.style.top = e.clientY + 'px';
+
       if (isPanning) {
         camera.x = e.clientX - panStart.x;
         camera.y = e.clientY - panStart.y;
@@ -65,6 +72,8 @@ export function initMouseEvents() {
       
       state.mouseX = e.clientX;
       state.mouseY = e.clientY;
+      const pos = screenToWorld(state.mouseX, state.mouseY);
+      emitCursor(pos.x, pos.y);
       
       switch(state.tool) {
         case 'line':
@@ -91,7 +100,7 @@ export function initMouseEvents() {
     window.addEventListener('mouseup', e => {
       if (isPanning) {
         isPanning = false;
-        dynamicCanvas.style.cursor = spaceDown ? 'grab' : 'crosshair';
+        dynamicCanvas.style.cursor = spaceDown ? 'grab' : 'none';
         return;
       }
     
