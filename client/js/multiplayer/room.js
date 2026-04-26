@@ -54,6 +54,7 @@ socket.on('room-created', ({ roomCode }) => {
     roomCode,
     password: passwordInput.value.trim()
   }));
+  window.history.pushState({}, '', `?room=${roomCode}`);
   enterWhiteboard();
 });
 
@@ -64,6 +65,7 @@ socket.on('joined-room', ({ roomCode }) => {
     roomCode,
     password: passwordInput.value.trim()
   }));
+  window.history.pushState({}, '', `?room=${roomCode}`);
   enterWhiteboard();
 });
 
@@ -117,12 +119,30 @@ socket.on('connect', () => {
 let isAutoRejoining = false;
 
 function tryAutoRejoin() {
-  const saved = sessionStorage.getItem('room');
-  console.log('tryAutoRejoin — saved:', saved);
-  if (!saved) return;
+  const params = new URLSearchParams(window.location.search);
+  const roomFromUrl = params.get('room');
 
+  if (roomFromUrl) {
+    // URL has room — check sessionStorage for password
+    const saved = sessionStorage.getItem('room');
+    if (saved) {
+      const { roomCode, password } = JSON.parse(saved);
+      if (roomCode === roomFromUrl) {
+        // same room — rejoin with saved password
+        isAutoRejoining = true;
+        socket.emit('join-room', { roomCode: roomFromUrl, password });
+        return;
+      }
+    }
+    // different room or no session — just prefill and show landing
+    roomCodeInput.value = roomFromUrl;
+    return;
+  }
+
+  // no URL param — check sessionStorage
+  const saved = sessionStorage.getItem('room');
+  if (!saved) return;
   const { roomCode, password } = JSON.parse(saved);
-  console.log('attempting rejoin:', roomCode, password);
   isAutoRejoining = true;
   socket.emit('join-room', { roomCode, password });
 }
