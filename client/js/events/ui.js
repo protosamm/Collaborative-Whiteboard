@@ -56,7 +56,6 @@ export function initUI() {
         tool.addEventListener('click', () => {
             const toolId = tool.id;
             state.tool = toolId;
-            updateCursor();
             setActiveTool();
         });
     });
