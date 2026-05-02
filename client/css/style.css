@@ -248,6 +248,7 @@ body {
 #zoom-control {
   position: fixed;
   display: flex;
+  width: 30%;
   gap: 2px;
   padding: 10px;
   bottom: 0px;
@@ -260,13 +261,21 @@ body {
   z-index: 102;
 }
 
+#zoom-control input {
+  flex: 1;
+}
+
 #zoom-control button {
+  flex: 0 0 10%;
   background-color: transparent;
   color: rgba(255,255,255,0.65);
   border: none;
   border-radius: 8px;
-  padding: 4px 8px;
   cursor: pointer;
+}
+
+#zoom-control span {
+  flex: 0 0 auto;
 }
 
 #zoom-control button:hover {
@@ -412,7 +421,6 @@ body {
   background: red;
   color: #ffffff;
   border: none;
-  border-radius: 0 0 0 8px;
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
@@ -453,4 +461,44 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+#small-screen-wrapper {
+  
+}
+
+@media (orientation: portrait) {
+  
+  #small-screen-wrapper {
+    position: fixed;
+    bottom: 0;
+    height: 7%;
+    width: 100%;
+    background: rgba(26,22,20,0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    flex-direction: row;
+    gap: 2px;
+  }
+
+  #toolbar-toggle, #leave-room-btn, #zoom-control{
+    position: relative;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  #toolbar-toggle {
+    flex: 0 0 15%;
+    padding: 0;
+  } 
+  
+  #leave-room-btn {
+    flex: 0 0 15%;
+  }
+
+  #zoom-control {
+    flex: 1;
+  }
 }

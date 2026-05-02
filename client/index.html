@@ -33,8 +33,6 @@
         </div>
         <div id="whiteboard" class="hidden main-container">
             <div id="toast"></div>
-            <button id="leave-room-btn">X</button>
-            <button id="toolbar-toggle">(</button>
             <div id="toolbar">
                 <button class="tool-button active" id="current-tool">🖊</button>
                 <div id="tools-popup" class="popup">
@@ -85,17 +83,21 @@
                     <button id="undo" class="tool-button" title="Undo - Ctrl+Z">↩</button>
                     <button id="redo" class="tool-button" title="Redo - Ctrl+Y">↪</button>
                 </div>
-
+                
                 <div class="separator"></div>
-
+                
                 <button id="save" class="tool-button" title="Save file - Ctrl+S">💾</button>
                 <button id="load" class="tool-button">📂</button>
             </div>
-            <div id="zoom-control">
-                <button id="zoom-out">−</button>
-                <input type="range" id="zoom-slider" min="1" max="150" value="82">
-                <button id="zoom-in">+</button>
-                <span id="zoom-display">82%</span>
+            <div id="small-screen-wrapper">
+                <button id="toolbar-toggle">(</button>
+                <div id="zoom-control">
+                    <button id="zoom-out">−</button>
+                    <input type="range" id="zoom-slider" min="1" max="150" value="82">
+                    <button id="zoom-in">+</button>
+                    <span id="zoom-display">82%</span>
+                </div>
+                <button id="leave-room-btn">X</button>
             </div>
             <div class="canvas">
                 <canvas id="canvas-static"></canvas>
