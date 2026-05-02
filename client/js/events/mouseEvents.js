@@ -160,13 +160,10 @@ export function initMouseEvents() {
     
   // --------------- Touch Events for Mobile ---------------
   
-  function touchToMouse(touch) {
-    return {
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-      button: 0, // always left click for touch
-    };
-  }
+  let lastPinchDistance = 0;
+  let lastPinchMid = { x: 0, y: 0 };
+  let isPinching = false;
+
   dynamicCanvas.addEventListener('touchstart', e => {
     e.preventDefault();
     
@@ -176,19 +173,90 @@ export function initMouseEvents() {
     }
 
     if (e.touches.length === 2) {
-      // two fingers — start pinch zoom
-      // store initial distance between fingers
+      isPinching = true;
+      cancelCurrentAction(); // stop current drawing when starting pinch
+      lastPinchDistance = pinchDistance(e);
+      lastPinchMid = pinchMidpoint(e);
     }
   }, { passive: false });
 
   dynamicCanvas.addEventListener('touchmove', e => {
     e.preventDefault();
-    handlePointerMove(touchToMouse(e.touches[0]));
+
+    if (e.touches.length === 1 && !isPinching) { // single finger move
+      handlePointerMove(touchToMouse(e.touches[0]));
+    }
+
+    if (e.touches.length === 2) {
+      const currentDistance = pinchDistance(e);
+      const currentMid = pinchMidpoint(e);
+
+      // zoom
+      const zoomFactor = currentDistance / lastPinchDistance;
+      const prevZoom = camera.zoom;
+      camera.zoom *= zoomFactor;
+      camera.zoom = Math.min(Math.max(camera.zoom, 0.01), 50);
+      const actualFactor = camera.zoom / prevZoom;
+
+      // pan toward midpoint
+      camera.x = currentMid.x - (lastPinchMid.x - camera.x) * actualFactor;
+      camera.y = currentMid.y - (lastPinchMid.y - camera.y) * actualFactor;
+
+      // update for next frame
+      lastPinchDistance = currentDistance;
+      lastPinchMid = currentMid;
+
+      updateZoomDisplay();
+      renderStatic();
+      renderDynamic();
+    }
   }, { passive: false });
 
   dynamicCanvas.addEventListener('touchend', e => {
     e.preventDefault();
-    handlePointerUp(touchToMouse(e.changedTouches[0]));
+
+    if (e.touches.length === 0) {
+      // all fingers lifted
+      isPinching = false;
+      handlePointerUp(touchToMouse(e.changedTouches[0]));
+    }
+
+    if (e.touches.length === 1) {
+      // one finger lifted during pinch — reset to single finger
+      isPinching = false;
+      lastPinchDistance = 0;
+    }
   }, { passive: false });
   
+  function touchToMouse(touch) {
+    return {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+      button: 0, // always left click for touch
+    };
+  }
+
+  // distance between two touch points
+  function pinchDistance(e) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // midpoint between two touch points
+  function pinchMidpoint(e) {
+    return {
+      x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+      y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+    };
+  }
 }
+
+
+// ---- to cancel draw when piching ----
+function cancelCurrentAction() {
+  state.currentStroke = null;
+  state.currentShape = null;
+  renderDynamic();
+}
+
