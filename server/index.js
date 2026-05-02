@@ -112,24 +112,24 @@ io.on('connection', socket => {
     });
   });
 
-  socket.on('leave-room', ({ roomCode }) => {
+  socket.on('leave-room', ({ roomCode }, callback) => {
     const room = rooms.get(roomCode);
-    if (!room) return;
-    room.clients.delete(socket.id);
-    socket.leave(roomCode);
+    if (room) {
+      room.clients.delete(socket.id);
+      socket.leave(roomCode);
+      socket.to(roomCode).emit('cursor-remove', { id: socket.id });
 
-    if (room.clients.size === 0) {
-      room.closeTimer = setTimeout(() => {
+      if (room.clients.size === 0) {
         rooms.delete(roomCode);
-      }, 5 * 60 * 1000);
-      return;
+        console.log(`room ${roomCode} closed — everyone left`);
+      } else if (room.hostId === socket.id) {
+        const newHostId = [...room.clients][0];
+        room.hostId = newHostId;
+        io.to(newHostId).emit('promoted-to-host');
+        console.log(`host migrated in room ${roomCode}`);
+      }
     }
-
-    if (room.hostId === socket.id) {
-      const newHostId = [...room.clients][0];
-      room.hostId = newHostId;
-      io.to(newHostId).emit('promoted-to-host');
-    }
+    if (callback) callback();
   });
 });
 

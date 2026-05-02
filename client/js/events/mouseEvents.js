@@ -30,14 +30,53 @@ export function initMouseEvents() {
         return; // don't pass pan clicks to tools
       }
     
+      handlePointerDown(e);
+    });
+    
+    window.addEventListener('mousemove', e => {
+      handlePointerMove(e);      
+    });
+    
+    window.addEventListener('mouseup', e => {
+      if (isPanning) {
+        isPanning = false;
+        dynamicCanvas.style.cursor = state.isSpaceDown ? 'grab' : 'none';
+        return;
+      }
+    
+      handlePointerUp(e);
+    });
+    
+    dynamicCanvas.addEventListener('wheel', e => {
+      e.preventDefault();
+    
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      const prevZoom = camera.zoom;
+      camera.zoom *= zoomFactor;
+      camera.zoom = Math.min(Math.max(camera.zoom, 0.01), 50);
+      const cx = dynamicCanvas.width / 2;
+      const cy = dynamicCanvas.height / 2;
+    
+      const actualFactor = camera.zoom / prevZoom;
+      camera.x = cx - (cx - camera.x) * actualFactor;
+      camera.y = cy - (cy - camera.y) * actualFactor;
+      
+      updateZoomDisplay();
+      renderDynamic();
+      renderStatic();
+    }, { passive: false });
+
+    // --- functions ---
+
+    function handlePointerDown(e){
       if (e.button === 0) { // left click only
         switch(state.tool) {
-          case 'line':
-            lineDown(e, dynamicCanvas);
-            renderDynamic();
-            break;
           case 'pen':
             penDown(e, dynamicCanvas);
+            renderDynamic();
+            break;
+          case 'line':
+            lineDown(e, dynamicCanvas);
             renderDynamic();
             break;
           case 'eraser':
@@ -54,10 +93,9 @@ export function initMouseEvents() {
             break;
         }
       }
-    });
-    
-    window.addEventListener('mousemove', e => {
+    }
 
+    function handlePointerMove(e){
       crosshair.style.left = e.clientX + 'px';
       crosshair.style.top = e.clientY + 'px';
 
@@ -95,15 +133,9 @@ export function initMouseEvents() {
       }
 
       renderDynamic();
-    });
-    
-    window.addEventListener('mouseup', e => {
-      if (isPanning) {
-        isPanning = false;
-        dynamicCanvas.style.cursor = spaceDown ? 'grab' : 'none';
-        return;
-      }
-    
+    }
+  
+    function handlePointerUp(e){
       switch(state.tool) {
         case 'line':
           lineUp();
@@ -124,25 +156,39 @@ export function initMouseEvents() {
 
       renderDynamic();
       renderStatic();
-    });
+    }
     
-    dynamicCanvas.addEventListener('wheel', e => {
-      e.preventDefault();
+  // --------------- Touch Events for Mobile ---------------
+  
+  function touchToMouse(touch) {
+    return {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+      button: 0, // always left click for touch
+    };
+  }
+  dynamicCanvas.addEventListener('touchstart', e => {
+    e.preventDefault();
     
-      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-      const prevZoom = camera.zoom;
-      camera.zoom *= zoomFactor;
-      camera.zoom = Math.min(Math.max(camera.zoom, 0.01), 50);
-      const cx = dynamicCanvas.width / 2;
-      const cy = dynamicCanvas.height / 2;
-    
-      const actualFactor = camera.zoom / prevZoom;
-      camera.x = cx - (cx - camera.x) * actualFactor;
-      camera.y = cy - (cy - camera.y) * actualFactor;
-      
-      updateZoomDisplay();
-      renderDynamic();
-      renderStatic();
-    }, { passive: false });
-    
+    if (e.touches.length === 1) {            // single finger — treat as mousedown
+      const mouse = touchToMouse(e.touches[0]);
+      handlePointerDown(mouse);
+    }
+
+    if (e.touches.length === 2) {
+      // two fingers — start pinch zoom
+      // store initial distance between fingers
+    }
+  }, { passive: false });
+
+  dynamicCanvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    handlePointerMove(touchToMouse(e.touches[0]));
+  }, { passive: false });
+
+  dynamicCanvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    handlePointerUp(touchToMouse(e.changedTouches[0]));
+  }, { passive: false });
+  
 }

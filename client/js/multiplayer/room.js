@@ -173,7 +173,8 @@ socket.on('error', ({ message }) => {
 
 
 export function leaveRoom() {
-  socket.emit('leave-room', { roomCode: state.roomCode });
   sessionStorage.removeItem('room');
-  location.reload();
+  socket.emit('leave-room', { roomCode: state.roomCode }, () => {
+    location.reload();
+  });
 }

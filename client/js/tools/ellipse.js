@@ -5,7 +5,7 @@ import { emitStroke } from '../multiplayer/socket.js'
 
 export function ellipseDown(e, canvas) {
     const pos = screenToWorld(e.clientX, e.clientY);
-
+    const fillColor = state.clipColors ? state.strokeColor : state.fillColor;
     state.currentShape = {
         id: generateId(),
         type : 'ellipse',
@@ -17,7 +17,7 @@ export function ellipseDown(e, canvas) {
         strokeColor : state.strokeColor,
         strokeWidth : state.strokeWidth / camera.zoom,
         fill : state.fill,
-        fillColor : state.fillColor
+        fillColor : fillColor
     }
 }
 
