@@ -248,6 +248,7 @@ body {
 #zoom-control {
   position: fixed;
   display: flex;
+  align-items: center;
   width: 30%;
   gap: 2px;
   padding: 10px;
@@ -433,9 +434,6 @@ body {
   opacity: 1;
 }
 
-
-
-
 #crosshair {
   position: fixed;
   pointer-events: none;
@@ -469,6 +467,14 @@ body {
 
 @media (orientation: portrait) {
   
+  #toolbar {
+    left: 0;
+    width: 6vh;
+    min-width : 80px;
+    border-radius: 0 14px 14px 0;
+  }
+
+
   #small-screen-wrapper {
     position: fixed;
     bottom: 0;
@@ -501,4 +507,6 @@ body {
   #zoom-control {
     flex: 1;
   }
+
+
 }
